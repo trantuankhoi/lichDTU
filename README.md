@@ -4,8 +4,7 @@ TÊN BIẾN:
 - parameters: lưu thông tin input, hay dùng trong thư viện requests
 - url_sub: link sau khi nhấn nút tìm kiếm
 - list_sub...: danh sách thông tin môn học như tên, mã lớp, thời gian, giảng viên được sắp xếp cố định theo list trong url sub
-
-MỤC TIÊU:
+CÁC BƯỚC CHÍNH:
 - Nhập thông tin ở parameters vào http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_coursesearch, sau đó ta được link ở url sub,
 bước này thực hiện ở dòng 11, 12, 13
 - Ta được url_sub nhưng chưa hoàn chỉnh nên phải thực hiện hàm XuLyUrlSub để có link như mẫu
