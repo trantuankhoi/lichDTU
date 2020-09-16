@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import requests
 
 parameters = {
@@ -11,8 +11,6 @@ parameters = {
 r = requests.get('http://courses.duytan.edu.vn/Modules/academicprogram/CourseResultSearch.aspx', parameters)
 soup = BeautifulSoup(r.text, 'html.parser')
 url_sub = soup.find_all(class_='hit')[2]['href'] #link sau khi press Search
-print("\n" + url_sub)
-
 
 def XuLyUrlSub(url_sub: str) -> str:
     ##http://courses.duytan.edu.vn/Sites/Home_ChuongTrinhDaoTao.aspx?p=home_listcoursedetail&courseid=48&timespan=70&t=s
@@ -25,7 +23,7 @@ def XuLyUrlSub(url_sub: str) -> str:
     return url_sub_new
 
 url_sub = XuLyUrlSub(url_sub)
-print(url_sub) ##  FLAG CHECK URL OF SUBJECT
+print(url_sub)
 
 ## Init info of sub
 list_sub_name = []
@@ -34,12 +32,15 @@ list_sub_time = []
 list_sub_place = []
 list_sub_teacher = []
 
-def get_sub_name(url_sub: str, list_sub_name: list) -> list:
-    req = requests.get(url_sub)
+def get_sub_name(url_sub: str) -> list:
+    thu = 'http://courses.duytan.edu.vn/Modules/academicprogram/CourseClassResult.aspx?courseid=55&semesterid=70&timespan=70'
+    req = requests.get(thu)
     soup = BeautifulSoup(req.text, 'html.parser')
-    print(url_sub)
-    for tag in soup.find_all("td"):
-        print(tag)
+    list_sub_name = soup.find_all(class_="nhom-lop")
+    return [str(td_tag.div.string).strip() for td_tag in list_sub_name]
 
-get_sub_name(url_sub, list_sub_name)
+list_sub_name = get_sub_name(url_sub)
+print(list_sub_name)
+
+
 
