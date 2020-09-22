@@ -38,12 +38,16 @@ def get_sub_name(url_sub: str) -> list:
 list_sub_name = get_sub_name(url_sub)
 print(list_sub_name)
 
-def get_sub_id(url_sub: str) -> list:
-    def has_lop_no_hit(tag):
-        return tag.has_attr("lop") and not tag.has_attr("hit")
+def get_sub_id(url_sub: str):
+    result = []
     req = requests.get(url_sub)
     soup = BeautifulSoup(req.text, 'html.parser')
-    list_sub_id = soup.find_all(has_lop_no_hit)
-    return [str(tr_tag.td.a).strip() for tr_tag in list_sub_id]
+    list_sub_id = soup.find_all(class_ = "lop")
+    for tr_tag in list_sub_id:
+        temp = tr_tag.td.a
+        td_tag = temp.parent
+        next_td_tag = td_tag.findNext("td")
+        result.append(next_td_tag)
+    return result
 
 print(get_sub_id(url_sub))
