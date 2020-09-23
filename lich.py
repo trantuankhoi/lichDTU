@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup, SoupStrainer
 import requests
 
 parameters = {
-    'discipline': 'CS',
-    'keyword1': '316',
+    'discipline': 'ENG',
+    'keyword1': '116',
     'hocky': '70',
     't': '1599613145426'
 }
@@ -65,6 +65,7 @@ def Get_Data(url_sub: str):
     # init list
     list_sub_name = []
     list_sub_id = []
+    list_sub_date = []
     list_sub_time = []
     list_sub_place = []
     list_sub_teacher = []    
@@ -87,16 +88,21 @@ def Get_Data(url_sub: str):
         if mem == "":
             list_sub_id.remove(mem)
 
-    #get sub time
-    templst1 = soup.find_all(class_ = "lop")
-    for tr_tag in templst1:
-        temp1 = tr_tag.td
-        temp1 = temp1.findNext("font").text
-        list_sub_time.append(temp1)
+    # get sub date
+    templst = soup.find_all(style = "font-weight:normal; color:#4682B4;")
+    for mem in templst:
+        if mem.text != "":
+            list_sub_date.append(mem.text)
 
+    # get sub time
+    templst = soup.find_all(class_ = "lop")
+    for mem in templst:
+        temp = mem.td.findNext("td").findNext("td").findNext("td").findNext("td").findNext("td").findNext("td").findNext("font").findNext("font").findNext("font").findNext().text
+        list_sub_time.append(str(temp).strip())
 
-
-    result = [list_sub_name, list_sub_id, list_sub_time, list_sub_place, list_sub_teacher]
+    F = len(list_sub_date)/ len(list_sub_name) # số buổi học trong 1 tuần (tần số)
+    result = [list_sub_name, list_sub_id, F,list_sub_date, list_sub_time, list_sub_place, list_sub_teacher]
     return result
 
-print(Get_Data(url_sub))
+info = Get_Data(url_sub)
+print(info[4])
