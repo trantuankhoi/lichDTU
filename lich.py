@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import requests
+import csv
 
 parameters = {
     'discipline': 'ENG',
@@ -95,14 +96,28 @@ def Get_Data(url_sub: str):
             list_sub_date.append(mem.text)
 
     # get sub time
-    templst = soup.find_all(class_ = "lop")
+    templst = soup.find_all("font", style = "font-weight:normal; color:#4682B4;")
     for mem in templst:
-        temp = mem.td.findNext("td").findNext("td").findNext("td").findNext("td").findNext("td").findNext("td").findNext("font").findNext("font").findNext("font").findNext().text
-        list_sub_time.append(str(temp).strip())
+        td_tag = mem.parent
+        br_tag = td_tag.br
+        date = br_tag.previous_element
+        list_sub_time.append(date)
+
+    # get sub place and teacher
+    templst = soup.find_all(style = "text-align: center; vertical-align: top;")
+    for mem in templst:
+        temp = mem.findNext("td")
+        temp1 = temp.get_text()
+        list_sub_place.append(str(temp1))
 
     F = len(list_sub_date)/ len(list_sub_name) # số buổi học trong 1 tuần (tần số)
-    result = [list_sub_name, list_sub_id, F,list_sub_date, list_sub_time, list_sub_place, list_sub_teacher]
+    result = [list_sub_name, list_sub_id, F,list_sub_date, list_sub_time, list_sub_place]
     return result
 
 info = Get_Data(url_sub)
-print(info[4])
+
+print(type(info))
+print(info[5][0])
+print(info[5][1])
+print(info[5][2])
+print(info[5][3])
