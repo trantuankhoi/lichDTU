@@ -112,8 +112,20 @@ def Get_Data(url_sub: str):
         temp1 = temp.get_text()
         list_sub_place.append(str(temp1))
 
+    # get sub lec
+    templst = soup.find(style = "width: 130px;")
+    for mem in templst:
+        tr_tag = mem.parent
+        tr_tag_next = tr_tag.findNext("tr")
+        tinchi = str(tr_tag_next.text).strip()
+    key = tinchi.find("(")
+    tinchi = int(tinchi[key+1])
+    Lec = []
+    for i in range(0, len(list_sub_id)):
+        Lec.append(tinchi)
     F = len(list_sub_date)/ len(list_sub_name) # số buổi học trong 1 tuần (tần số)
-    result = [list_sub_name, list_sub_id, F,list_sub_date, list_sub_time, list_sub_place]
+    # Lec (result[6]) là số tín chỉ
+    result = [list_sub_name, list_sub_id, F,list_sub_date, list_sub_time, list_sub_place, Lec]
     return result
 
 info = Get_Data(url_sub)
@@ -130,6 +142,7 @@ def init_excel(info: list):
     sheet1.write(0, 4, "Time")
     sheet1.write(0, 5, "Place")
     sheet1.write(0, 6, "Instructor")
+    sheet1.write(0, 7, "Lec")
 
     # dán dữ liệu trong info vào excel
     row = 1
@@ -143,7 +156,10 @@ def init_excel(info: list):
         sheet1.write(row + i, col + 4, re.sub('[ ]+', ' ', info[4][i].rstrip().lstrip())) # time
         sheet1.write(row + i, col + 6, re.sub('([\n\r])', ' ', info[5][2 * i + 1].strip()))
         sheet1.write(row + i, col + 5, re.sub('([\n\r])', ' ', info[5][2 * i].strip())) # place
+        sheet1.write(row + i, col + 7, info[6][i])
 
     wb.save("info.xls") 
 
 init_excel(info)
+print("Init excel file!")
+
