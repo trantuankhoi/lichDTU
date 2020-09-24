@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup, SoupStrainer
 import requests
-import csv
+from xlwt import Workbook
+import re
+
 
 parameters = {
     'discipline': 'ENG',
@@ -116,8 +118,39 @@ def Get_Data(url_sub: str):
 
 info = Get_Data(url_sub)
 
-print(type(info))
-print(info[5][0])
-print(info[5][1])
-print(info[5][2])
-print(info[5][3])
+print(info[0][0])
+print(info[0][1])
+print(info[0][2])
+print(info[0][3])
+
+def init_excel(info: list):
+    wb = Workbook()
+    sheet1 = wb.add_sheet("sheet 1")
+
+    # hàng trước cột sau
+    sheet1.write(0, 0, "STT")
+    sheet1.write(0, 1, "Name")
+    sheet1.write(0, 2, "ID")
+    sheet1.write(0, 3, "Date")
+    sheet1.write(0, 4, "Time")
+    sheet1.write(0, 5, "Place")
+    sheet1.write(0, 6, "Instructor")
+
+    # dán dữ liệu trong info vào excel
+    row = 1
+    col = 0
+    n = len(info[0])
+    for i in range(0, n):
+        sheet1.write(row + i, col + 0, i + 1)
+        sheet1.write(row + i, col + 1, info[0][i]) # name trong list la 0
+        sheet1.write(row + i, col + 2, info[1][i]) # id
+        sheet1.write(row + i, col + 3, info[3][i]) # date
+        sheet1.write(row + i, col + 4, info[4][i]) # time
+        sheet1.write(row + i, col + 6, re.sub('([\n\r])', ' ', info[5][2 * i + 1].strip()))
+        sheet1.write(row + i, col + 5, re.sub('([\n\r])', ' ', info[5][2 * i].strip())) # place
+
+    wb.save("info.xls") 
+
+
+
+init_excel(info)
