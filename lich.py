@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 import requests
 from xlwt import Workbook
 import re
-
+import pandas as pd
 
 parameters = {
     'discipline': 'ENG',
@@ -118,11 +118,6 @@ def Get_Data(url_sub: str):
 
 info = Get_Data(url_sub)
 
-print(info[0][0])
-print(info[0][1])
-print(info[0][2])
-print(info[4][0])
-
 def init_excel(info: list):
     wb = Workbook()
     sheet1 = wb.add_sheet("sheet 1")
@@ -150,7 +145,5 @@ def init_excel(info: list):
         sheet1.write(row + i, col + 5, re.sub('([\n\r])', ' ', info[5][2 * i].strip())) # place
 
     wb.save("info.xls") 
-
-
 
 init_excel(info)
