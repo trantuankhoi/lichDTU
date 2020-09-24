@@ -121,7 +121,7 @@ info = Get_Data(url_sub)
 print(info[0][0])
 print(info[0][1])
 print(info[0][2])
-print(info[0][3])
+print(info[4][0])
 
 def init_excel(info: list):
     wb = Workbook()
@@ -145,7 +145,7 @@ def init_excel(info: list):
         sheet1.write(row + i, col + 1, info[0][i]) # name trong list la 0
         sheet1.write(row + i, col + 2, info[1][i]) # id
         sheet1.write(row + i, col + 3, info[3][i]) # date
-        sheet1.write(row + i, col + 4, info[4][i]) # time
+        sheet1.write(row + i, col + 4, re.sub('[ ]+', ' ', info[4][i].rstrip().lstrip())) # time
         sheet1.write(row + i, col + 6, re.sub('([\n\r])', ' ', info[5][2 * i + 1].strip()))
         sheet1.write(row + i, col + 5, re.sub('([\n\r])', ' ', info[5][2 * i].strip())) # place
 
